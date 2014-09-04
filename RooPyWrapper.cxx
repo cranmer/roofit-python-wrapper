@@ -28,7 +28,9 @@ ClassImp(RooPyWrapper)
 
  RooPyWrapper::RooPyWrapper(const RooPyWrapper& other, const char* name) :  
   RooAbsReal(other,name), 
-  features("features",this,other.features) { 
+  features("features",this,other.features),
+  m_callback(other.m_callback) 
+ { 
  } 
 
 
@@ -36,19 +38,29 @@ ClassImp(RooPyWrapper)
  Double_t RooPyWrapper::evaluate() const 
  { 
    // ENTER EXPRESSION IN TERMS OF VARIABLE ARGUMENTS HERE 
-   std::cout << "Hi from C++!" << std::endl;
-   char* blah=NULL;
    #ifndef __CINT__
-   PyObject* result = PyObject_CallFunction( m_callback, blah );
-   cout << "result as long " << PyInt_AsLong(result) << endl;
-   cout << "result as double " << PyFloat_AsDouble(result) << endl; 
-   double ret;
-   PyArg_Parse((result),"d", &ret);
-   cout << "from parse " << ret << endl;
 
-   Py_XDECREF( result );
+  // convert member variable features to PyObject
+  PyObject* arg = PyFloat_FromDouble(features.arg().getVal());
+
+  // callback with argument
+  PyObject* result = PyObject_CallFunctionObjArgs( m_callback, arg , NULL  );
+
+  // decrement reference counter to arg
+  Py_XDECREF( arg );
+
+  // convert result to double
+  double ret;
+  PyArg_Parse((result),"d", &ret);
+
+  // other conversion approachs
+  //   cout << "result as long " << PyInt_AsLong(result) << endl;
+  //   cout << "result as double " << PyFloat_AsDouble(result) << endl; 
+
+
+  Py_XDECREF( result );
    #endif
-   return 1.0 ; 
+   return ret ; 
  } 
 
 void RooPyWrapper::RegisterCallBack( PyObject* pyobject )

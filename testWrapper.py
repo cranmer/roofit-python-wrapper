@@ -1,12 +1,16 @@
 from ROOT import *
 gSystem.Load( 'libRooFitPythonWrapper' )
 
-def SayHi():
-   print 'Hi from python!'
-   return 3.
+def myFunction(x):
+   #return x*x as an example
+   return x*x 
 
-x = RooRealVar('x','x',0,1)
+x = RooRealVar('x','x',-1,1)
 s = RooPyWrapper('s','s',x)
-s.RegisterCallBack( SayHi );
-print "\ngetVal"
-s.getVal()
+s.RegisterCallBack( myFunction );
+
+c1 = TCanvas('c1')
+frame = x.frame()
+s.plotOn(frame)
+frame.Draw()
+c1.SaveAs('RooPyWrapper.png')
