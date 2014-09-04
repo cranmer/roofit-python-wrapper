@@ -26,4 +26,5 @@ s.RegisterCallBack( SayHi );
 print "\ngetVal"
 s.getVal()
 ```
+this returns 3. as expected
 
