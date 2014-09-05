@@ -23,6 +23,7 @@ ClassImp(RooPyWrapper)
   RooAbsReal(name,title), 
   features("features","features",this,_features)
  { 
+    m_callback=NULL;
  } 
 
 
@@ -39,6 +40,11 @@ ClassImp(RooPyWrapper)
  { 
    // ENTER EXPRESSION IN TERMS OF VARIABLE ARGUMENTS HERE 
    #ifndef __CINT__
+
+  if(    m_callback==NULL) {
+    cout << "no call back set" << endl;
+    return 0;
+  }
 
   // convert member variable features to PyObject
   PyObject* arg = PyFloat_FromDouble(features.arg().getVal());
