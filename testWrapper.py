@@ -1,9 +1,11 @@
 from ROOT import *
+import ROOT
+ROOT.RooStats
 gSystem.Load( 'libRooFitPythonWrapper' )
 
 def myFunction(x):
    #return x*x as an example
-   return x*x 
+   return x*x*x 
 
 x = RooRealVar('x','x',-1,1)
 s = RooPyWrapper('s','s',x)

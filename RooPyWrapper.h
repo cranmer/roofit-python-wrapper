@@ -15,9 +15,7 @@
 #include "RooAbsReal.h"
 #include "RooAbsCategory.h"
 
-#ifndef __CINT__
 #include "Python.h"
-#endif
 
 #ifndef PyObject_HEAD
 struct _object;

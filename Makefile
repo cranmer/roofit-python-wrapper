@@ -1,6 +1,7 @@
 ############# MACROS ##############
 
 RC     := root-config
+ROOTCINT := rootcint
 ifeq ($(shell which $(RC) 2>&1 | sed -ne "s@.*/$(RC)@$(RC)@p"),$(RC))
 MKARCH := $(wildcard $(shell $(RC) --etcdir)/Makefile.arch)
 endif
@@ -27,7 +28,7 @@ OBJS      := $(SRCS:.$(SrcSuf)=.$(ObjSuf))
 ############# RULES ###############
 
 .$(SrcSuf).$(ObjSuf):
-	$(CXX) `python-config --include` $(CXXFLAGS) -c $<
+	$(CXX) `python-config --includes` $(CXXFLAGS) -c $<
 
 ############# TARGETS #############
 
@@ -37,7 +38,8 @@ all:    $(TARGETLIB)
 
 $(DICT): $(HDRS)
 	@echo "Generating dictionary $@..."
-	$(ROOTCINT)  -f $@ -c  $^
+	# rootcling -f RooFitPythonWrapperDict.cxx  `python-config --includes` 
+	rootcling  -f $@  `python-config --includes`  -c  $^
 	#$(ROOTCINT)  -f $@ -c RooFitPythonWrapper.h LinkDef.h
 
 
