@@ -10,6 +10,7 @@
 
 #include "RooPyWrapper.h" 
 #include <math.h> 
+#include <iostream>
 
 #ifndef __CINT__
 #include "Python.h"
@@ -42,7 +43,7 @@ ClassImp(RooPyWrapper)
    #ifndef __CINT__
 
   if(    m_callback==NULL) {
-    cout << "no call back set" << endl;
+    std::cout << "no call back set" << std::endl;
     return 0;
   }
 
