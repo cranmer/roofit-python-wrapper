@@ -20,19 +20,22 @@
 ClassImp(RooPyWrapper) 
 
   RooPyWrapper::RooPyWrapper(const char *name, const char *title, 
-                       RooAbsReal& _features) :
-  RooAbsReal(name,title), 
-  features("features","features",this,_features)
+                       RooArgList& _features) :
+  features(RooListProxy("features","features",this)),
+  RooAbsReal(name,title)
  { 
+    for(int i = 0; i<_features.getSize();++i){
+      features.add(_features[i]);
+    }
     m_callback=NULL;
  } 
 
 
  RooPyWrapper::RooPyWrapper(const RooPyWrapper& other, const char* name) :  
   RooAbsReal(other,name), 
-  features("features",this,other.features),
+  features(RooListProxy("features",this,other.features)),
   m_callback(other.m_callback) 
- { 
+ {
  } 
 
 
@@ -47,14 +50,20 @@ ClassImp(RooPyWrapper)
     return 0;
   }
 
-  // convert member variable features to PyObject
-  PyObject* arg = PyFloat_FromDouble(features.arg().getVal());
+  auto f = features;
+
+
+  PyObject *mylist = PyList_New(2);
+  for(int i=0; i<f.getSize();++i){
+    PyObject* arg = PyFloat_FromDouble(((RooRealVar&)f[i]).getVal());
+    PyList_SetItem(mylist,i,arg);
+  }  
 
   // callback with argument
-  PyObject* result = PyObject_CallFunctionObjArgs( m_callback, arg , NULL  );
+  PyObject* result = PyObject_CallFunctionObjArgs( m_callback, mylist , NULL  );
 
-  // decrement reference counter to arg
-  Py_XDECREF( arg );
+
+  Py_DECREF(mylist);
 
   // convert result to double
   double ret;

@@ -11,7 +11,9 @@
 
 #include "RooAbsReal.h"
 #include "RooRealProxy.h"
+#include "RooListProxy.h"
 #include "RooCategoryProxy.h"
+#include "RooRealVar.h"
 #include "RooAbsReal.h"
 #include "RooAbsCategory.h"
 
@@ -26,7 +28,7 @@ typedef _object PyObject;
 class RooPyWrapper : public RooAbsReal{
 public:
   RooPyWrapper() {} ; 
-  RooPyWrapper(const char *name, const char *title, RooAbsReal& _features);
+  RooPyWrapper(const char *name, const char *title, RooArgList& _features);
   RooPyWrapper(const RooPyWrapper& other, const char* name=0) ;
   virtual TObject* clone(const char* newname) const { return new RooPyWrapper(*this,newname); }
   inline virtual ~RooPyWrapper() { }
@@ -39,8 +41,7 @@ protected:
   virtual Double_t evaluate() const ;
 
 private:
-  RooRealProxy features ;  
-
+  RooListProxy features;
   PyObject* m_callback;
   ClassDef(RooPyWrapper,1); // Your description goes here...
 };
