@@ -20,14 +20,15 @@
 ClassImp(RooPyWrapper) 
 
   RooPyWrapper::RooPyWrapper(const char *name, const char *title, 
-                       RooArgList& _features) :
+                       RooArgList& _features,PyObject* pyobject ) :
   features(RooListProxy("features","features",this)),
+  m_callback(pyobject),
   RooAbsReal(name,title)
  { 
     for(int i = 0; i<_features.getSize();++i){
       features.add(_features[i]);
     }
-    m_callback=NULL;
+    Py_INCREF( pyobject );
  } 
 
 
@@ -79,11 +80,5 @@ ClassImp(RooPyWrapper)
    return ret ; 
  } 
 
-void RooPyWrapper::RegisterCallBack( PyObject* pyobject )
-{
-	// see http://root.cern.ch/phpBB3/viewtopic.php?t=2606
-	Py_INCREF( pyobject );
-	m_callback = pyobject;
-}
 
 

@@ -21,8 +21,7 @@ for i,(init,bounds) in enumerate([
    pars[name] = RooRealVar(name,name,init,bounds[0],bounds[1])
    params.add(pars[name])
 
-s = ROOT.RooPyWrapper('s','s',params)
-s.RegisterCallBack( myFunction );
+s = ROOT.RooPyWrapper('s','s',params,myFunction)
 
 for k,v in pars.items():
    c1 = TCanvas('c1')

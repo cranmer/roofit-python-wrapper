@@ -28,12 +28,10 @@ typedef _object PyObject;
 class RooPyWrapper : public RooAbsReal{
 public:
   RooPyWrapper() {} ; 
-  RooPyWrapper(const char *name, const char *title, RooArgList& _features);
+  RooPyWrapper(const char *name, const char *title, RooArgList& _features, PyObject* pyobject );
   RooPyWrapper(const RooPyWrapper& other, const char* name=0) ;
   virtual TObject* clone(const char* newname) const { return new RooPyWrapper(*this,newname); }
   inline virtual ~RooPyWrapper() { }
-
-  void RegisterCallBack( PyObject* pyobject );
 
 
 protected:
