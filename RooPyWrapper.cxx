@@ -53,7 +53,7 @@ ClassImp(RooPyWrapper)
   auto f = features;
 
 
-  PyObject *mylist = PyList_New(2);
+  PyObject *mylist = PyList_New(f.getSize());
   for(int i=0; i<f.getSize();++i){
     PyObject* arg = PyFloat_FromDouble(((RooRealVar&)f[i]).getVal());
     PyList_SetItem(mylist,i,arg);

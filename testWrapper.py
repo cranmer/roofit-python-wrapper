@@ -1,31 +1,33 @@
-from ROOT import *
 import ROOT
+import numpy as np
+import time
 ROOT.RooStats
-gSystem.Load( 'libRooFitPythonWrapper' )
+ROOT.gSystem.Load( 'libRooFitPythonWrapper' )
+from ROOT import RooRealVar,RooArgList,TCanvas
 
-def myFunction(x):
-   x,y = x
-   #return x*x as an example
-   return x+y*y
+def myFunction(pars):
+   x,y,z = pars
+   result = x**2 + y**3 + z
+   return result
 
-x = RooRealVar('x','x',-1,1)
-y = RooRealVar('y','y',-1,1)
+params = RooArgList('list')
+pars = {}
+for i,(init,bounds) in enumerate([
+   (0,(-1,1)),
+   (0,(-1,1)),
+   (0,(-1,1)),
+]):
+   name = 'par{i}'.format(i = i)
+   pars[name] = RooRealVar(name,name,init,bounds[0],bounds[1])
+   params.add(pars[name])
 
-lst = RooArgList('list')
-lst.add(x)
-lst.add(y)
-
-s = RooPyWrapper('s','s',lst)
+s = ROOT.RooPyWrapper('s','s',params)
 s.RegisterCallBack( myFunction );
 
-c1 = TCanvas('c1')
-frame = x.frame()
-s.plotOn(frame)
-frame.Draw()
-c1.SaveAs('RooPyWrapper_x.png')
+for k,v in pars.items():
+   c1 = TCanvas('c1')
+   frame = v.frame()
+   s.plotOn(frame)
+   frame.Draw()
+   c1.SaveAs('RooPyWrapper_{k}.png'.format(k = k))
 
-c1 = TCanvas('c1')
-frame = y.frame()
-s.plotOn(frame)
-frame.Draw()
-c1.SaveAs('RooPyWrapper_y.png')
